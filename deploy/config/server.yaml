@@ -1,0 +1,53 @@
+# LUM — server configuration. Documentation: doc/configuration.md
+# Secrets are never written here: use ${VARIABLE} (environment or .env file).
+server:
+  listen: "0.0.0.0:8080"
+  base_url: "https://lum.example.com"
+  log_level: info          # debug | info | warn | error
+
+auth:
+  mode: oidc               # oidc | none (none = trusted network only)
+  oidc:
+    issuer: "https://auth.example.com/realms/example"
+    client_id: "lum"
+    client_secret: "${OIDC_CLIENT_SECRET}"
+  session_ttl: 12h         # lifetime of a web UI session
+
+github:
+  token: "${GITHUB_TOKEN}"   # optional; 60 req/h without, 5000 with
+  cache_ttl: 15m             # ETag cache of the responses
+
+scheduler:
+  check_cron: "0 7 * * *"    # daily version check
+  jitter: 5m
+  concurrency: 5             # concurrent checks
+
+notifications:
+  - type: ntfy
+    url: "https://ntfy.example.com/updates"
+    on: [update_available, job_failed, job_success]
+  - type: webhook            # e.g. Home Assistant
+    url: "${HA_WEBHOOK_URL}"
+    on: [update_available, job_failed]
+  # - type: telegram         # see doc/checks-notifications.md#telegram
+  #   url: "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage"
+  #   chat_id: "123456789"
+  #   on: [update_available, job_failed]
+
+agents:
+  shared_secret: "${AGENT_BOOTSTRAP_SECRET}"  # initial enrollment only
+  heartbeat_interval: 60s
+  offline_after: 5m
+  enrollment: open           # open | closed (closed once all agents are enrolled)
+  self_update: auto          # auto | off: agent updates from /opt/lum/agent
+
+scripts:
+  dir: "/data/scripts"       # central directory of the update scripts
+
+# Snapshots before updates (doc/proxmox.md). Without this section, updates of apps
+# with snapshot_before_update: true (or update.resources) are refused.
+proxmox:
+  url: "https://pve.example.com:8006"
+  token_id: "lum@pve!lum"
+  token_secret: "${PROXMOX_TOKEN_SECRET}"
+  # fingerprint: "AB:CD:…"   # SHA-256 fingerprint of the node's self-signed certificate

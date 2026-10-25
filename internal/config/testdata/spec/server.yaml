@@ -1,0 +1,36 @@
+# Example from the specification (§4.1); scripts.dir is relative to this directory.
+server:
+  listen: "0.0.0.0:8080"
+  base_url: "https://lum.example.com"
+  log_level: info
+
+auth:
+  mode: oidc
+  oidc:
+    issuer: "https://auth.example.com/realms/example"
+    client_id: "lum"
+    client_secret: "${OIDC_CLIENT_SECRET}"
+
+github:
+  token: "${GITHUB_TOKEN}"
+  cache_ttl: 15m
+
+scheduler:
+  check_cron: "0 7 * * *"
+  jitter: 5m
+
+notifications:
+  - type: ntfy
+    url: "https://ntfy.example.com/updates"
+    on: [update_available, job_failed, job_success]
+  - type: webhook
+    url: "${HA_WEBHOOK_URL}"
+    on: [update_available, job_failed]
+
+agents:
+  shared_secret: "${AGENT_BOOTSTRAP_SECRET}"
+  heartbeat_interval: 60s
+  offline_after: 5m
+
+scripts:
+  dir: "scripts"

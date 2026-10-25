@@ -1,0 +1,51 @@
+# Example from the specification (§4.2).
+apps:
+  - id: sonarr
+    name: "Sonarr"
+    lxc_id: 101
+    agent: sonarr-lxc
+    upstream:
+      type: github
+      repo: "Sonarr/Sonarr"
+      include_prerelease: false
+      tag_regex: "^v?(?P<version>\\d+\\.\\d+\\.\\d+(\\.\\d+)?)$"
+    current:
+      type: api
+      url: "http://192.0.2.15:8989/api/v3/system/status"
+      auth_header: "X-Api-Key"
+      token: "${SONARR_API_KEY}"
+      json_path: "$.version"
+    update:
+      type: api
+      method: POST
+      url: "http://192.0.2.15:8989/api/v3/command"
+      auth_header: "X-Api-Key"
+      token: "${SONARR_API_KEY}"
+      body: '{"name": "ApplicationUpdate"}'
+    healthcheck:
+      url: "http://192.0.2.15:8989/ping"
+      expect_status: 200
+      timeout: 120s
+    snapshot_before_update: true
+
+  - id: vaultwarden
+    name: "Vaultwarden"
+    lxc_id: 102
+    agent: vaultwarden-lxc
+    upstream:
+      type: github
+      repo: "dani-garcia/vaultwarden"
+      tag_regex: "^(?P<version>\\d+\\.\\d+\\.\\d+)$"
+    current:
+      type: agent
+      command: ["/opt/vaultwarden/vaultwarden", "--version"]
+      output_regex: "(?P<version>\\d+\\.\\d+\\.\\d+)"
+    update:
+      type: script
+      script: "vaultwarden.sh"
+      timeout: 15m
+    healthcheck:
+      url: "http://192.0.2.21:8000/alive"
+      expect_status: 200
+      timeout: 120s
+    snapshot_before_update: true

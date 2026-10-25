@@ -1,0 +1,27 @@
+# LUM server — systemd unit. See doc/deployment.md.
+# Install: cp deploy/lum-server.service /etc/systemd/system/ && systemctl daemon-reload && systemctl enable --now lum-server
+[Unit]
+Description=LXC Update Manager (LUM) server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=lum
+Group=lum
+ExecStart=/opt/lum/lum-server --config-dir /opt/lum/config --env-file /opt/lum/config/.env --data-dir /data
+# systemctl reload lum-server re-reads server.yaml/apps.yaml (a failed reload keeps the previous config).
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=5
+
+# Hardening: the server only needs its data dir, its config and the network.
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=/data
+ReadOnlyPaths=/opt/lum
+
+[Install]
+WantedBy=multi-user.target

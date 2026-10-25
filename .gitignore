@@ -1,0 +1,13 @@
+# Build
+/bin/
+/internal/ui/dist/
+/tmp/
+
+# Secrets
+.env
+
+# Editors / OS
+.DS_Store
+.idea/workspace.xml
+.idea/shelf/
+/.idea/

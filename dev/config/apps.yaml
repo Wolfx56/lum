@@ -1,0 +1,40 @@
+# Development apps: real GitHub repositories, fake local APIs.
+apps:
+  - id: sonarr
+    name: "Sonarr"
+    lxc_id: 101
+    upstream:
+      type: github
+      repo: "Sonarr/Sonarr"
+    current:
+      type: api
+      url: "http://localhost:8989/api/v3/system/status"
+      auth_header: "X-Api-Key"
+      token: "${SONARR_API_KEY}"
+      json_path: "$.version"
+    update:
+      type: api
+      url: "http://localhost:8989/api/v3/command"
+      auth_header: "X-Api-Key"
+      token: "${SONARR_API_KEY}"
+      body: '{"name": "ApplicationUpdate"}'
+    healthcheck:
+      url: "http://localhost:8989/ping"
+
+  - id: vaultwarden
+    name: "Vaultwarden"
+    lxc_id: 102
+    agent: test-agent        # = default AGENT_ID of make run-agent
+    upstream:
+      type: github
+      repo: "dani-garcia/vaultwarden"
+      tag_regex: "^(?P<version>\\d+\\.\\d+\\.\\d+)$"
+    current:
+      type: agent
+      # In production: ["/opt/vaultwarden/bin/vaultwarden", "--version"]. In dev, a
+      # simulated version: 1.30.0, then the one written by dev/scripts/vaultwarden.sh.
+      command: ["sh", "-c", "cat /tmp/lum-dev-vaultwarden-version 2>/dev/null || echo 'Vaultwarden 1.30.0'"]
+      output_regex: "(?P<version>\\d+\\.\\d+\\.\\d+)"
+    update:
+      type: script
+      script: "vaultwarden.sh"

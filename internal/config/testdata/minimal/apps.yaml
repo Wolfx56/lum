@@ -1,0 +1,10 @@
+apps:
+  - id: tautulli
+    lxc_id: 120
+    upstream:
+      type: github
+      repo: "Tautulli/Tautulli"
+    current:
+      type: api
+      url: "http://192.0.2.30:8181/api/v2?cmd=get_tautulli_info"
+      json_path: "$.response.data.tautulli_version"

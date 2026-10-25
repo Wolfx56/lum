@@ -1,0 +1,3 @@
+# Smallest valid server.yaml: everything else takes its default value.
+auth:
+  mode: none

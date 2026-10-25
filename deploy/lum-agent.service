@@ -1,0 +1,22 @@
+# LUM agent — systemd unit, installed by install-agent.sh in /opt/lum-agent and
+# linked with `systemctl link` (doc/agent.md). Everything of the agent lives in
+# /opt/lum-agent: binary, this unit, env, token and scripts/.
+# env provides LUM_AGENT_ID, LUM_SERVER_URL and, until the first enrollment
+# only, LUM_AGENT_SECRET.
+[Unit]
+Description=LXC Update Manager (LUM) agent
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+EnvironmentFile=/opt/lum-agent/env
+ExecStart=/opt/lum-agent/lum-agent --id ${LUM_AGENT_ID} --server ${LUM_SERVER_URL}
+# Always restarted, including after a self_update (the agent exits on purpose).
+Restart=always
+RestartSec=5
+# Update scripts run as root and manage the services of the container.
+User=root
+
+[Install]
+WantedBy=multi-user.target

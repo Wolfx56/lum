@@ -1,0 +1,32 @@
+# Development configuration (make run-server).
+server:
+  listen: ":8080"
+  log_level: debug
+
+auth:
+  mode: none                 # local development only
+
+github:
+  # Optional: uncomment and set GITHUB_TOKEN in .env for 5000 req/h.
+  # token: "${GITHUB_TOKEN}"
+  cache_ttl: 15m
+
+proxmox:
+  url: "https://pve.example.com:8006"        # a node of the cluster
+  token_id: "lum@pve!lum"                     # user@realm!token_name
+  token_secret: "${PROXMOX_TOKEN_SECRET}"     # in .env
+
+scheduler:
+  check_cron: "*/30 * * * *"
+  jitter: 0s
+
+notifications:
+  - type: webhook            # received and printed by make run-fakeapp
+    url: "http://localhost:8989/hook"
+    on: [update_available]
+
+agents:
+  shared_secret: "${AGENT_BOOTSTRAP_SECRET}"
+
+scripts:
+  dir: "../scripts"          # relative to this directory → dev/scripts
