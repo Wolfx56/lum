@@ -232,3 +232,15 @@ func TestAgents(t *testing.T) {
 		t.Errorf("Agents = %v, %v", all, err)
 	}
 }
+
+func TestFormatTimeSortable(t *testing.T) {
+	base := time.Date(2026, 10, 25, 12, 0, 5, 0, time.UTC)
+	a := formatTime(base.Add(120 * time.Millisecond))
+	b := formatTime(base.Add(123 * time.Millisecond))
+	if a >= b {
+		t.Errorf("formatTime not lexically sortable: %q >= %q", a, b)
+	}
+	if got, err := parseTime(a); err != nil || !got.Equal(base.Add(120*time.Millisecond)) {
+		t.Errorf("parseTime(%q) = %v, %v", a, got, err)
+	}
+}

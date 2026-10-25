@@ -106,11 +106,15 @@ func (s *Store) inTx(ctx context.Context, fn func(*sql.Tx) error) error {
 }
 
 // Times are stored as UTC RFC 3339 strings: readable with the sqlite3 CLI and sortable.
+// The fraction has a fixed width (RFC3339Nano drops trailing zeros, which breaks the
+// lexical order used by ORDER BY ts).
+const timeLayout = "2006-01-02T15:04:05.000000000Z07:00"
+
 func formatTime(t time.Time) string {
 	if t.IsZero() {
 		return ""
 	}
-	return t.UTC().Format(time.RFC3339Nano)
+	return t.UTC().Format(timeLayout)
 }
 
 func parseTime(s string) (time.Time, error) {
