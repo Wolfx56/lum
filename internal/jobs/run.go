@@ -402,9 +402,12 @@ func (r *run) healthcheck(ctx context.Context) error {
 			r.system(ctx, fmt.Sprintf("Healthcheck OK (HTTP %d)", got))
 			return nil
 		}
-		if err != nil {
+		switch {
+		case err != nil && hctx.Err() != nil && last != "":
+			// The probe was cut by the timeout: keep the previous, meaningful result.
+		case err != nil:
 			last = redact.Error(err).Error()
-		} else {
+		default:
 			last = fmt.Sprintf("HTTP %d", got)
 		}
 		select {
