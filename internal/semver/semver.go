@@ -1,5 +1,5 @@
 // Package semver compares application versions using extended SemVer (spec §5.3):
-// 3 or 4 numeric segments (a missing segment counts as 0), an optional leading
+// 2 to 4 numeric segments (a missing segment counts as 0), an optional leading
 // "v", an optional -prerelease (SemVer precedence rules) and an ignored +build.
 // See doc/version-detection.md.
 package semver
@@ -23,7 +23,7 @@ func (v Version) String() string { return v.raw }
 // IsPrerelease reports whether the version has a -prerelease suffix.
 func (v Version) IsPrerelease() bool { return len(v.Prerelease) > 0 }
 
-// Parse parses "1.2.3", "v4.0.1.2", "1.2.3-beta.1" or "1.2.3+build".
+// Parse parses "12.3", "1.2.3", "v4.0.1.2", "1.2.3-beta.1" or "1.2.3+build".
 func Parse(s string) (Version, error) {
 	raw := strings.TrimSpace(s)
 	rest := strings.TrimPrefix(strings.TrimPrefix(raw, "v"), "V")
@@ -34,8 +34,8 @@ func Parse(s string) (Version, error) {
 
 	v := Version{raw: raw}
 	parts := strings.Split(core, ".")
-	if len(parts) < 3 || len(parts) > 4 {
-		return Version{}, fmt.Errorf("invalid version %q: expected 3 or 4 numeric segments", s)
+	if len(parts) < 2 || len(parts) > 4 {
+		return Version{}, fmt.Errorf("invalid version %q: expected 2 to 4 numeric segments", s)
 	}
 	for i, p := range parts {
 		n, err := strconv.ParseUint(p, 10, 64)

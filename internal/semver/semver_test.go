@@ -13,6 +13,8 @@ func TestParse(t *testing.T) {
 		"2024.10.1":        {2024, 10, 1, 0},
 		"4.0.9.2244":       {4, 0, 9, 2244},
 		"1.2.3-rc.1+build": {1, 2, 3, 0},
+		"v12.3":            {12, 3, 0, 0},
+		"12.3-rc.1":        {12, 3, 0, 0},
 	}
 	for in, want := range valid {
 		v, err := Parse(in)
@@ -24,7 +26,7 @@ func TestParse(t *testing.T) {
 			t.Errorf("Parse(%q) = %v, want %v", in, v.Segments, want)
 		}
 	}
-	for _, in := range []string{"", "1.2", "1.2.3.4.5", "1.x.3", "1..3", "latest", "1.2.3-", "1.2.3-a..b", "-1.2.3"} {
+	for _, in := range []string{"", "1", "v12", "1.2.3.4.5", "1.x.3", "1..3", "latest", "1.2.3-", "1.2.3-a..b", "-1.2.3"} {
 		if _, err := Parse(in); err == nil {
 			t.Errorf("Parse(%q): expected an error", in)
 		}
@@ -38,6 +40,8 @@ func TestCompare(t *testing.T) {
 	}{
 		{"1.2.3", "1.2.3", 0},
 		{"1.2.3", "1.2.3.0", 0}, // missing segment = 0
+		{"12.3", "12.3.0", 0},
+		{"10.11.6", "12.3", -1},
 		{"v1.2.3", "1.2.3", 0},
 		{"1.2.3", "1.2.4", -1},
 		{"1.10.0", "1.9.9", 1}, // numeric, not lexicographic

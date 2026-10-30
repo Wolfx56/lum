@@ -59,7 +59,7 @@ Error messages never contain these secrets: URLs are cleaned before being displa
 ## Comparison and states
 
 Versions are compared as extended SemVer:
-- 3 or 4 numeric segments; a missing segment counts as 0, so `1.2.3` = `1.2.3.0`;
+- 2 to 4 numeric segments; a missing segment counts as 0, so `12.3` = `12.3.0` and `1.2.3` = `1.2.3.0`;
 - numeric comparison, so `1.10.0` > `1.9.9`;
 - a leading `v` is tolerated;
 - a `-prerelease` suffix follows SemVer rules: `1.0.0-beta` < `1.0.0`, and `beta.2` < `beta.11`;

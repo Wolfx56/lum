@@ -164,3 +164,7 @@ Details in [`doc/authentication.md`](doc/authentication.md).
 - **Language**: documentation (including the spec and this file), UI text, log lines, notifications and API messages switched from French to English. This deviates from §13 ("UI: French").
 - **Anonymization**: the real deployment configuration (hosts, container IDs, app inventory, network layout) is kept outside the repository. Examples use `example.com`, RFC 5737 addresses (`192.0.2.x`) and generic container IDs (101, 102…).
 - **Agent script examples**: `deploy/scripts/` is reduced to `example.sh` (template) and `vaultwarden.sh`.
+
+## D21 — Two-segment versions
+- **Deviation from §5.3** ("3 or 4 numeric segments"): versions with 2 numeric segments (`12.3`) are accepted, the missing segments count as 0 (`12.3` = `12.3.0`). Jellyfin switched to this numbering (`v12.3` after `v10.11.x`), and no tag matched anymore.
+- **Default `tag_regex`**: `^v?(?P<version>\d+\.\d+(\.\d+){0,2})$`, consistent with the parser. A single number (`12`) is still rejected, to avoid matching non-version tags.
