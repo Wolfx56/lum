@@ -32,7 +32,7 @@ Method: one branch per milestone (`m1-config`, `m2-versions`…), merged once th
 - [x] Docs: `doc/configuration.md`.
 
 ## M2 — Version collection
-- [x] `internal/semver`: 3 or 4 segments (missing segment = 0), comparison, computing the state `up_to_date | update_available | unknown | error`.
+- [x] `internal/semver`: 2 to 4 segments (missing segment = 0, 2 segments since D21), comparison, computing the state `up_to_date | update_available | unknown | error`.
 - [x] `internal/upstream`: hand-written GitHub client (D8):
   - ETag/304 cache with TTL;
   - `include_prerelease`;

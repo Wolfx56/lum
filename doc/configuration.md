@@ -215,7 +215,7 @@ apps:
 | `type` | — | `github` |
 | `repo` | — | `owner/name` |
 | `include_prerelease` | `false` | include pre-releases |
-| `tag_regex` | `^v?(?P<version>\d+\.\d+\.\d+(\.\d+)?)$` | must contain the named group `(?P<version>…)`, which yields the canonical version |
+| `tag_regex` | `^v?(?P<version>\d+\.\d+(\.\d+){0,2})$` | must contain the named group `(?P<version>…)`, which yields the canonical version |
 
 In YAML double-quoted strings, backslashes must be doubled: `tag_regex: "^(?P<version>\\d+\\.\\d+\\.\\d+)$"`.
 

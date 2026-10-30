@@ -111,7 +111,7 @@ const (
 	DefaultHeartbeatInterval = 60 * time.Second
 	DefaultOfflineAfter      = 5 * time.Minute
 	DefaultScriptsDir        = "/data/scripts"
-	DefaultTagRegex          = `^v?(?P<version>\d+\.\d+\.\d+(\.\d+)?)$`
+	DefaultTagRegex          = `^v?(?P<version>\d+\.\d+(\.\d+){0,2})$`
 	DefaultUpdateMethod      = "POST"
 	DefaultUpdateTimeout     = 15 * time.Minute
 	DefaultExpectStatus      = 200
